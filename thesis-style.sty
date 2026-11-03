@@ -1,0 +1,296 @@
+%% =====================================================================
+%%  thesis-style.sty — layout of the dissertation.
+%%  You normally do NOT need to edit this file:
+%%    * colors      -> Colors.tex
+%%    * metadata    -> Main.tex
+%%    * text        -> FrontMatter/, Chapters/, EndMatter/
+%%
+%%  Package options (set in Main.tex: \usepackage[...]{thesis-style}):
+%%    print   : 3 mm bleed + crop marks for the printer
+%%    review  : A4, 1.5 spacing, line numbers (to send to supervisors)
+%%    draft   : skip front/end matter for faster compiling
+%%    cover   : include FrontMatter/figures/front_cover.pdf and
+%%              EndMatter/figures/back_cover.pdf
+%% =====================================================================
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{thesis-style}[2026/11/03 UTwente dissertation style]
+
+\newif\ifprint
+\newif\ifreview
+\newif\ifdraft
+\newif\ifcover
+\DeclareOption{print}{\printtrue}
+\DeclareOption{review}{\reviewtrue}
+\DeclareOption{draft}{\drafttrue}
+\DeclareOption{cover}{\covertrue}
+\ProcessOptions\relax
+
+%% ------------------------------------------------------------- Colors
+\RequirePackage[table]{xcolor}
+%% \SetPalette{primary}{secondary}{accent}{coverbg}: sets all named colors.
+\newcommand{\SetPalette}[4]{%
+    \definecolor{primary}{HTML}{#1}%
+    \definecolor{secondary}{HTML}{#2}%
+    \definecolor{accent}{HTML}{#3}%
+    \definecolor{coverbg}{HTML}{#4}%
+    \colorlet{covertext}{primary!70!black}%
+    \colorlet{boxbg}{secondary!25!white}%
+    \colorlet{chapternum}{secondary}%
+    \colorlet{thumbtext}{white}%
+    \colorlet{links}{primary}%
+}
+\SetPalette{3A5A73}{A8DADC}{E63946}{A8DADC} % defaults, overridden by Colors.tex
+
+%% ------------------------------------------------------------- Page size
+%% UT dissertations are printed on 170 x 240 mm.
+\RequirePackage{geometry}
+\ifreview
+    \geometry{a4paper, margin=2.5cm}
+\else
+    \ifprint
+        \geometry{papersize={176mm,246mm}, layoutsize={170mm,240mm},
+                  layoutoffset={3mm,3mm}}
+    \else
+        \geometry{papersize={170mm,240mm}}
+    \fi
+    \geometry{hscale=0.75, vscale=0.80}
+\fi
+
+%% ------------------------------------------------------------- Fonts & language
+\RequirePackage[T1]{fontenc}
+\RequirePackage[default,light,bold]{domitian}
+\RequirePackage[dutch,english]{babel}   % last one = main language
+\RequirePackage{microtype}
+\RequirePackage{setspace}
+\ifreview \onehalfspacing \fi
+
+%% ------------------------------------------------------------- Same packages as papers-template
+\RequirePackage{amsmath,amssymb,mathtools}
+\RequirePackage{graphicx}
+\RequirePackage[inkscapelatex=false]{svg}
+\RequirePackage{pdfpages}
+\RequirePackage{import}          % chapters with their own figures/ folder
+\RequirePackage{tabularx,xltabular,booktabs,multirow,multicol,array}
+\IfFormatAtLeastTF{2026-06-01}{\RequirePackage{nicematrix}}{} % needs a recent TeX installation
+\RequirePackage[inline,shortlabels]{enumitem}
+\RequirePackage{pdflscape,rotating,afterpage,placeins,flafter}
+\RequirePackage{caption}
+\RequirePackage[skip=0.5ex]{subcaption}
+\RequirePackage{dirtytalk}
+\RequirePackage{lipsum}
+\RequirePackage{listings}
+\RequirePackage{environ}
+\RequirePackage{etoolbox}
+\RequirePackage{siunitx}
+\RequirePackage[ruled,vlined,linesnumbered]{algorithm2e}
+\SetAlFnt{\linespread{0.85}\selectfont}
+\RequirePackage{lineno}
+\ifreview \linenumbers \fi
+\RequirePackage{emptypage}       % blank pages without header/number
+\RequirePackage{tikz}
+\usetikzlibrary{calc}
+\RequirePackage[many]{tcolorbox}
+\tcbuselibrary{breakable}
+\RequirePackage{soul}            % \hl{...}
+\sethlcolor{accent!30}
+\RequirePackage[textsize=scriptsize, colorinlistoftodos]{todonotes}
+\presetkeys{todonotes}{color=accent!40}{}
+\setlength{\marginparwidth}{15mm}
+\RequirePackage[skipempty,role=primary]{credits}
+
+%% ------------------------------------------------------------- Bibliography (author-year, as in papers)
+\RequirePackage[authoryear,round,sort]{natbib}
+\RequirePackage{breakcites}
+\RequirePackage{bibentry}        % full references for "based on" and publication list
+\RequirePackage[nottoc]{tocbibind}
+
+%% ------------------------------------------------------------- Links (load late)
+\RequirePackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=links, citecolor=links,
+            urlcolor=links, filecolor=links}
+\RequirePackage[capitalise,noabbrev,nameinlink]{cleveref}
+\RequirePackage{orcidlink}
+
+%% ------------------------------------------------------------- Acronyms (no external tool needed)
+\RequirePackage[acronym,nonumberlist,toc]{glossaries}
+\glsdisablehyper
+\setacronymstyle{long-short}
+\makenoidxglossaries
+
+%% ------------------------------------------------------------- Headings
+\RequirePackage[noindentafter]{titlesec}
+\RequirePackage{titletoc}
+\newcommand{\chapternumbersize}{90pt}
+
+\titleformat{\chapter}[display]
+    {\flushright\bfseries}
+    {\color{chapternum}\fontsize{\chapternumbersize}{\chapternumbersize}\selectfont\thechapter}
+    {0pt}
+    {\Huge\color{primary}}
+\titlespacing*{\chapter}{0pt}{0pt}{2\baselineskip}
+
+\titleformat{\section}
+    {\Large\bfseries}{\thesection\ }{0pt}{\color{primary}}
+\titlespacing*{\section}{0pt}{\baselineskip}{0.3\baselineskip}
+\titleformat{\subsection}
+    {\large\bfseries}{\thesubsection\ }{0pt}{\color{primary}}
+\titlespacing*{\subsection}{0pt}{\baselineskip}{0.2\baselineskip}
+\titleformat{\subsubsection}
+    {\bfseries}{\thesubsubsection\ }{0pt}{\color{primary}}
+\setcounter{secnumdepth}{3}
+
+\dottedcontents{chapter}[1.5em]{\vspace{0.5\baselineskip}\bfseries}{1.5em}{0pc}
+\dottedcontents{section}[3.8em]{}{2.3em}{8pt}
+\dottedcontents{subsection}[7em]{}{3.2em}{8pt}
+
+%% Colored bullets
+\renewcommand*\labelitemi{\color{primary}\textbullet}
+\renewcommand*\labelitemii{\color{primary}--}
+\renewcommand*\labelitemiii{\color{primary}$\diamond$}
+
+%% ------------------------------------------------------------- Crop marks (print option)
+\ifprint
+    \newcommand*\cropmarks{%
+        \begin{tikzpicture}[remember picture,overlay]
+            \foreach \c/\sx/\sy in {north east/-1/-1, north west/1/-1,
+                                    south east/-1/1, south west/1/1}{
+                \draw ($(current page.\c)+(0mm,\sy*3mm)$) -- ++(\sx*2mm,0);
+                \draw ($(current page.\c)+(\sx*3mm,0mm)$) -- ++(0,\sy*2mm);
+            }
+        \end{tikzpicture}}
+\else
+    \newcommand*\cropmarks{}
+\fi
+
+%% ------------------------------------------------------------- Thumb tabs (chapter number on page edge)
+\newif\ifthumb
+\newlength\thumbheight  \setlength\thumbheight{24pt}
+\newlength\thumbhspace  \setlength\thumbhspace{36pt}
+\newlength\thumbvspace  \setlength\thumbvspace{2\thumbheight}
+\newcommand*\thumbtab[1]{% #1 = east (odd pages) or west (even pages)
+    \ifthumb
+    \begin{tikzpicture}[remember picture,overlay]
+        \coordinate (corner) at ($(current page.north #1)
+            -(0pt,1in+\topmargin+\headheight+\headsep)
+            -(0pt,\value{chapter}\thumbvspace-\thumbvspace)$);
+        \ifstrequal{#1}{east}
+          {\fill[secondary,rounded corners=4pt] ($(corner)+(4pt,0)$)
+                rectangle ++(-\thumbhspace-4pt,-\thumbheight);
+           \node[anchor=east,inner sep=8pt] at ($(corner)-(0,0.5\thumbheight)$)}
+          {\fill[secondary,rounded corners=4pt] ($(corner)-(4pt,0)$)
+                rectangle ++(\thumbhspace+4pt,-\thumbheight);
+           \node[anchor=west,inner sep=8pt] at ($(corner)-(0,0.5\thumbheight)$)}
+          {\bfseries\color{thumbtext}\fontsize{18pt}{18pt}\selectfont\thechapter};
+    \end{tikzpicture}%
+    \fi}
+
+%% ------------------------------------------------------------- Headers & footers
+\RequirePackage{fancyhdr}
+\setlength{\headheight}{14pt}
+\fancypagestyle{mainmatter}{%
+    \fancyhf{}%
+    \fancyhead[LE]{\cropmarks\thumbtab{west}\thepage}%
+    \fancyhead[RO]{\cropmarks\thumbtab{east}\thepage}%
+    \fancyhead[RE]{\nouppercase{\leftmark}}%
+    \fancyhead[LO]{\nouppercase{\rightmark}}%
+    \renewcommand*\headrulewidth{0.4pt}}
+\fancypagestyle{plain}{%
+    \fancyhf{}\fancyhead{\cropmarks}%
+    \fancyfoot[LE,RO]{\thepage}%
+    \renewcommand*\headrulewidth{0pt}}
+\fancypagestyle{empty}{%
+    \fancyhf{}\fancyhead{\cropmarks}%
+    \renewcommand*\headrulewidth{0pt}}
+\pagestyle{mainmatter}
+\renewcommand*\headrule{{\color{primary}\hrule\@height\headrulewidth\@width\headwidth}\vskip-\headrulewidth}
+\renewcommand*\chaptermark[1]{\markboth{\ifnum\c@secnumdepth>\m@ne\if@mainmatter\thechapter\ \fi\fi\color{primary}#1}{}}
+\renewcommand*\sectionmark[1]{\markright{\thesection\ \color{primary}#1}}
+\renewcommand*\footnoterule{\vspace*{-3pt}{\color{primary}\hrule width 0.5\textwidth height 0.4pt}\vspace*{2.6pt}}
+
+%% =====================================================================
+%%  COMMANDS YOU USE IN THE TEXT
+%% =====================================================================
+
+%% Unnumbered chapter that appears in the TOC and header (Summary, Acknowledgements…)
+\newcommand{\unnumberedchapter}[1]{%
+    \chapter*{#1}\addcontentsline{toc}{chapter}{#1}\markboth{\color{primary}#1}{\color{primary}#1}}
+
+%% Footnote without number
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+
+%% --- Paper-based chapters -------------------------------------------
+%% \chapterbasedon{bibkey}  -> "This chapter is based on: <full reference>"
+\newcommand{\chapterbasedon}[1]{%
+    \blfootnote{\textbf{This chapter is based on:} \bibentry{#1}}}
+
+%% Chapter abstract (lines above and below, italic)
+\newenvironment{chapterabstract}
+    {\par\noindent{\color{secondary}\rule{\linewidth}{0.8pt}}\par\smallskip
+     \noindent\textbf{\color{primary}Abstract}\par\smallskip\itshape}
+    {\par\noindent{\color{secondary}\rule{\linewidth}{0.8pt}}\par\bigskip}
+
+%% Keywords: same \sep syntax as elsarticle, so you can copy-paste
+\newcommand{\sep}{\unskip~\textbullet~\ignorespaces}
+\newcommand{\chapterkeywords}[1]{%
+    \par\noindent\textbf{\color{primary}Keywords:} #1\par\bigskip}
+
+%% Elsarticle compatibility: highlights are ignored in the thesis
+\NewEnviron{highlights}{}
+%% (\resetcredits comes from credits.sty; called automatically per chapter)
+
+%% --- Research questions / contributions ------------------------------
+\newcounter{rq}
+\newenvironment{ResearchQuestion}[1][]
+    {\refstepcounter{rq}\par\medskip\noindent\textbf{\color{primary}RQ\,\therq: #1}\itshape}
+    {\par\medskip}
+\crefname{rq}{RQ}{RQs}
+\newcounter{con}
+\newenvironment{contribution}[1][]
+    {\refstepcounter{con}\par\medskip\noindent\textbf{\color{primary}Contribution~\thecon: #1}}
+    {\par\medskip}
+
+%% --- Quotes (as in papers-template) ----------------------------------
+\newcommand{\myquote}[2][]{%
+  \begin{quote}\small\itshape``#2''\ifblank{#1}{}{\normalfont\hfill--- #1}\end{quote}}
+
+\newcommand\epigraph[2]{%
+    \begin{flushright}{\itshape #1}\par\smallskip #2\end{flushright}\bigskip}
+
+\newcommand\dedication[1]{%
+    \thispagestyle{empty}\vspace*{\fill}%
+    \begin{flushright}#1\end{flushright}\vspace*{\fill}\cleardoublepage}
+
+%% --- Highlight box (boxJ from papers-template, now palette-aware) ----
+\newtcolorbox{boxJ}[1][]{
+    sharpish corners, colback=boxbg, colframe=secondary,
+    boxrule=0pt, toprule=4.5pt, enhanced, breakable,
+    fuzzy shadow={0pt}{-2pt}{-0.5pt}{0.5pt}{black!35}, #1}
+
+%% --- Code listings (as in papers-template) ---------------------------
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color[rgb]{0.25,0.25,0.28},
+    commentstyle=\color[rgb]{0,0.6,0},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color[rgb]{0.4,0.4,0.4},
+    stringstyle=\color[rgb]{0.57,0.5,0.80},
+    basicstyle=\ttfamily\tiny\color[rgb]{0.9,0.9,0.9},
+    breakatwhitespace=true, captionpos=b, numbers=left, numbersep=5pt,
+    showstringspaces=false, tabsize=1}
+\lstset{style=mystyle}
+
+%% --- Table column types (as in papers-template) ----------------------
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{R}{>{\raggedleft\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+%% --- Chapter inclusion ------------------------------------------------
+%% \IncludeChapter{Chapters/02_Paper1}  -> inputs Chapters/02_Paper1/Chapter.tex
+%% Inside that folder, \input{...} and \includegraphics{figures/...} are
+%% relative to the chapter folder.
+\newcommand{\IncludeChapter}[1]{\FloatBarrier\resetcredits\subimport{#1/}{Chapter}}
+%% \SkipChapter{Title} keeps the numbering when a chapter is commented out
+\newcommand{\SkipChapter}[1]{\chapter{#1}\textit{(Chapter not compiled in this run.)}}
+
+\interfootnotelinepenalty=10000
+\sloppy
+\endinput

@@ -1,0 +1,109 @@
+%% =====================================================================
+%%  PhD DISSERTATION — University of Twente (ITC)
+%%
+%%  Where to edit what:
+%%    Colors ............ Colors.tex          (one line to change palette)
+%%    Title, names ...... this file, section 1
+%%    Chapters .......... this file, section 3  + Chapters/<folder>/
+%%    Front matter ...... FrontMatter/        (cover, summary, samenvatting…)
+%%    End matter ........ EndMatter/          (appendices, about the author…)
+%%    Acronyms .......... Acronyms.tex
+%%    References ........ Main.bib
+%%    Layout ............ thesis-style.sty    (normally untouched)
+%%
+%%  Compile with pdfLaTeX + BibTeX (Overleaf default), or: latexmk -pdf Main
+%% =====================================================================
+
+\documentclass[10pt,twoside,openright]{book}
+
+%% Options: print | review | draft | cover   (combine with commas)
+%%   review -> A4, 1.5 spacing, line numbers (for supervisors)
+%%   draft  -> only the chapters, fast compile
+%%   print  -> 3 mm bleed + crop marks for the printer
+%%   cover  -> includes FrontMatter/figures/front_cover.pdf & EndMatter/figures/back_cover.pdf
+\usepackage[]{thesis-style}
+% \usepackage[review]{thesis-style}
+% \usepackage[draft]{thesis-style}
+% \usepackage[print,cover]{thesis-style}
+
+\input{Colors}      % <-- all colors
+\input{Acronyms}    % <-- all acronyms
+
+%% =====================================================================
+%%  1) THESIS INFORMATION  (used on title pages, PDF metadata, etc.)
+%% =====================================================================
+\newcommand{\ThesisTitle}{Test of Title of long Disseration}
+\newcommand{\ThesisSubtitle}{This is an optional subtitle}
+\newcommand{\ThesisAuthor}{Iván Cárdenas-León}
+\newcommand{\AuthorBirth}{born on the 1st of January 1990\\in City, Country}
+
+\newcommand{\DefenceDate}{Friday 1 January 2027 at 14.30 hours}
+\newcommand{\RectorMagnificus}{prof.\,dr.\,ir.\,A.\,B. Rector}  % check current rector
+\newcommand{\Supervisors}{%
+    prof.\,dr.\,K. Pfeffer\\
+    dr.\,M. Koeva}
+\newcommand{\CoSupervisors}{}   % leave empty if none
+
+%% Graduation committee (one row per member)
+\newcommand{\Committee}{%
+    Chair/secretary & prof.\,dr.\,A. Chair         & University of Twente \\[1ex]
+    Supervisors     & prof.\,dr.\,K. Pfeffer       & University of Twente \\
+                    & dr.\,M. Koeva                & University of Twente \\[1ex]
+    Committee       & prof.\,dr.\,A. Member        & University of Twente \\
+                    & prof.\,dr.\,B. Member        & University of Twente \\
+                    & prof.\,dr.\,C. Member        & External University  \\
+                    & dr.\,D. Member               & External University  \\
+}
+
+%% Colophon
+\newcommand{\Funding}{This research was funded by ...}
+\newcommand{\FunderLogo}{}   % or leave empty
+\newcommand{\ITCNumber}{XXX}                     % ITC dissertation number
+\newcommand{\ISBN}{978-90-365-XXXX-X}
+\newcommand{\DOI}{10.3990/1.XXXXXXXXXX}
+\newcommand{\CoverDesign}{\ThesisAuthor}
+\newcommand{\PrintedBy}{Ipskamp Printing, Enschede}
+\newcommand{\ThesisYear}{2027}
+
+%% Main research question (can be reused with \mainrq anywhere)
+\newcommand{\mainrq}{\begin{boxJ}\itshape How can ... ?\end{boxJ}}
+
+\hypersetup{pdftitle={\ThesisTitle}, pdfauthor={\ThesisAuthor}}
+
+%% =====================================================================
+\begin{document}
+\nobibliography*    % allows \bibentry (full references) anywhere
+
+%% =====================================================================
+%%  2) FRONT MATTER
+%% =====================================================================
+\frontmatter
+\ifdraft
+    \tableofcontents
+    \blfootnote{DRAFT compiled: \today}
+\else
+    \input{FrontMatter/FrontMatter}
+\fi
+
+%% =====================================================================
+%%  3) CHAPTERS — one folder per chapter, each with a Chapter.tex.
+%%     Comment out a line to skip a chapter; use \SkipChapter{Title}
+%%     instead if you want to keep the numbering of the next chapters.
+%% =====================================================================
+\mainmatter
+\thumbtrue      % colored chapter tabs on the page edge
+
+\IncludeChapter{Chapters/01_Introduction}
+\IncludeChapter{Chapters/02_Paper1}
+\IncludeChapter{Chapters/03_Paper2}
+% \SkipChapter{Title of Paper 2}
+\IncludeChapter{Chapters/04_Synthesis}
+
+\thumbfalse
+
+%% =====================================================================
+%%  4) END MATTER
+%% =====================================================================
+\input{EndMatter/EndMatter}
+
+\end{document}

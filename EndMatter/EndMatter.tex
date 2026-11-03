@@ -1,0 +1,25 @@
+%% Order of the end matter. Comment out what you do not need.
+
+\ifdraft\else
+    \input{EndMatter/Appendices}
+\fi
+
+%% ----- Bibliography (one list for the whole thesis)
+\cleardoublepage
+\renewcommand{\bibname}{Bibliography}
+\markboth{\color{primary}\bibname}{\color{primary}\bibname}
+{\footnotesize
+\bibliographystyle{myBiblio}
+\bibliography{Main}}
+
+\ifdraft\else
+    %% ----- Acronyms
+    \printnoidxglossary[type=\acronymtype, title=List of Acronyms]
+    \input{EndMatter/AboutTheAuthor}
+    \input{EndMatter/Publications}
+\fi
+
+\ifcover
+    \cleardoublepage
+    \includepdf[width=\paperwidth]{EndMatter/figures/back_cover.pdf}
+\fi

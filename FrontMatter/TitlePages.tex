@@ -1,0 +1,100 @@
+%% Title pages. All names/dates come from section 1 of Main.tex,
+%% all colors from Colors.tex — usually nothing to edit here.
+
+%% ----------------------------------------------------------- Printed cover (optional)
+\ifcover
+    \includepdf[width=\paperwidth]{FrontMatter/figures/front_cover.pdf}
+    \cleardoublepage
+\fi
+
+%% ----------------------------------------------------------- Page i: colored title page
+\begin{titlepage}
+    \pagecolor{coverbg}
+    \begin{tikzpicture}[remember picture,overlay]
+        \fill[secondary] (current page.south west) rectangle
+            ([yshift=1.2cm]current page.south east);
+        \fill[primary] ([yshift=1.2cm]current page.south west) rectangle
+            ([yshift=1.5cm]current page.south east);
+    \end{tikzpicture}
+    \centering\color{covertext}
+    \vspace*{0.5cm}
+    {\Huge\bfseries\MakeUppercase{\ThesisTitle}\par}
+    \vspace{0.8cm}
+    {\Large\ThesisSubtitle\par}
+    \vspace{4cm}
+    {\Large\bfseries\ThesisAuthor\par}
+    \vfill
+\end{titlepage}
+\nopagecolor
+
+%% ----------------------------------------------------------- Page ii: blank
+\thispagestyle{empty}\null\clearpage
+
+%% ----------------------------------------------------------- Page iii: official title page
+\begin{titlepage}
+    \centering
+    {\huge\bfseries\color{primary}\MakeUppercase{\ThesisTitle}\par}
+    \vspace{0.5cm}
+    {\Large\ThesisSubtitle\par}
+    \vfill
+    {\Large DOCTORAL THESIS\par}
+    \vfill
+    to obtain\\
+    the degree of doctor at the University of Twente,\\
+    on the authority of the rector magnificus,\\
+    \RectorMagnificus,\\
+    on account of the decision of the Doctorate Board,\\
+    to be publicly defended\\
+    on \DefenceDate
+    \vfill
+    by
+    \vfill
+    {\large\bfseries\ThesisAuthor\par}
+    \bigskip
+    \AuthorBirth
+    \vspace*{1cm}
+\end{titlepage}
+
+%% ----------------------------------------------------------- Page iv: approval + colophon
+\begin{titlepage}
+    \raggedright
+    This dissertation has been approved by:\par\bigskip
+    Supervisor(s)\\
+    \Supervisors\par
+    \ifx\CoSupervisors\empty\else
+        \medskip Co-supervisor(s)\\
+        \CoSupervisors\par
+    \fi
+    \vfill
+    \noindent
+    \ifx\FunderLogo\empty\else
+        \begin{minipage}[c]{2.5cm}\includegraphics[width=2.2cm]{\FunderLogo}\end{minipage}%
+    \fi
+    \begin{minipage}[c]{\dimexpr\linewidth-2.6cm}\small\Funding\end{minipage}
+    \vfill
+    \small
+    Cover design: \CoverDesign\\
+    Printed by: \PrintedBy\\
+    Lay-out: \ThesisAuthor\\
+    ITC dissertation number \ITCNumber\\
+    ISBN: \ISBN\\
+    DOI: \DOI\par\bigskip
+    \textcopyright\ \ThesisYear\ \ThesisAuthor, The Netherlands. All rights reserved.
+    No parts of this thesis may be reproduced, stored in a retrieval system or
+    transmitted in any form or by any means without permission of the author.
+    Alle rechten voorbehouden. Niets uit deze uitgave mag worden vermenigvuldigd,
+    in enige vorm of op enige wijze, zonder voorafgaande schriftelijke toestemming
+    van de auteur.
+\end{titlepage}
+
+%% ----------------------------------------------------------- Page v: graduation committee
+\begin{titlepage}
+    \raggedright
+    {\bfseries\color{primary}GRADUATION COMMITTEE\par}
+    \bigskip
+    \begin{tabular}{@{}lll@{}}
+        \Committee
+    \end{tabular}
+    \vfill
+\end{titlepage}
+\cleardoublepage

@@ -1,0 +1,35 @@
+%% =====================================================================
+%%  Paper-based chapter.  Copy the section files of your paper
+%%  (Introduction.tex, Methodology.tex, ...) from papers-template into
+%%  this folder and put its figures in figures/.
+%% =====================================================================
+\chapter[Short title for the header]{Full title of the paper}
+\label{ch:paper1}
+\glsresetall
+\chapterbasedon{examplePaper1}   % bib key of the published paper (in Main.bib)
+
+\begin{chapterabstract}
+Paste the abstract of the paper here.
+\end{chapterabstract}
+
+\chapterkeywords{Urban Digital Twins \sep Planning Support Systems \sep Keyword three}
+
+
+\input{Introduction}
+\FloatBarrier
+\input{Methodology}
+\FloatBarrier
+\input{Results}
+\FloatBarrier
+\input{Discussion}
+\input{Conclusions}
+
+%% ----- Author contributions (same \credit syntax as papers-template)
+\section*{CRediT authorship contribution statement}
+\credit{I.CL.}{Conceptualization, Methodology, Writing -- original draft}
+\credit{K.P.}{Supervision, Writing -- review \& editing}
+\credit{M.K.}{Supervision, Writing -- review \& editing}
+\insertcredits
+
+%% ----- Chapter appendix (optional)
+% \input{Appendix}
