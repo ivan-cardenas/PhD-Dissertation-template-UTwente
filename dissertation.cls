@@ -153,20 +153,33 @@
 \definecolor{tudelft-bright-green}{cmyk}{0.36,0,1,0}
 \definecolor{tudelft-yellow}{cmyk}{0.02,0,0.54,0}
 
-\newcommand{\chaptercolor}{black}
+
+\definecolor{crosstwin-blue}{HTML}{a8dadc}
+\definecolor{crosstwin-darkblue}{HTML}{3a5a73}
+\definecolor{fade-white}{HTML}{f1faee}
+\definecolor{summer-red}{HTML}{e63946}
+\definecolor{titlepagecolor}{cmyk}{75,68,67,90}
+\definecolor{emerald}{rgb}{0.31, 0.78, 0.47}
+\definecolor{deeppink}{HTML}{D14064}
+\definecolor{lowpink}{HTML}{ffe6ec}
+\definecolor{paper}{HTML}{f2ede4}
+
+
+\newcommand{\chaptercolor}{crosstwin-blue}
+
 
 %% Use TU Delft cyan as the color for titles, unless the 'print' option is
 %% specified, in which case we use anthracite, a dark gray, which is also used
 %% for the thumb indices.
 \definecolor{anthracite}{cmyk}{0,0,0,0.8}
 \if@print
-    \colorlet{title}{anthracite}
+    \colorlet{title}{tudelft-dark-blue}
 \else
     % \colorlet{title}{tudelft-cyan}
     
     \colorlet{title}{\chaptercolor}
 \fi
-\colorlet{thumb}{anthracite}
+\colorlet{thumb}{tudelft-dark-blue}
 
 %% Set the paper size to 17 by 24 cm, approximately halfway between A4 and A5.
 \if@print
@@ -389,7 +402,7 @@
 %% right, followed by the part name on the next line in the title color.
 \titleformat{\part}[display]
     {\flushright\titlestyle}
-    {\fontsize{\chapternumbersize}{\chapternumbersize}\selectfont\bfseries\thepart}
+    {\color{tudelft-darkblue}\fontsize{\chapternumbersize}{\chapternumbersize}\selectfont\bfseries\thepart}
     {0pt}
     % {\Huge\color{title}}
       {\Huge\color{\chaptercolor}}
