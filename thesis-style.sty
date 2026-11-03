@@ -35,7 +35,7 @@
     \definecolor{coverbg}{HTML}{#4}%
     \colorlet{covertext}{primary!70!black}%
     \colorlet{boxbg}{secondary!25!white}%
-    \colorlet{chapternum}{secondary}%
+    \colorlet{chapternumbg}{white}% big number on the colored opening page
     \colorlet{thumbtext}{white}%
     \colorlet{links}{primary}%
 }
@@ -58,7 +58,7 @@
 
 %% ------------------------------------------------------------- Fonts & language
 \RequirePackage[T1]{fontenc}
-\RequirePackage[default,light,bold]{domitian}
+\RequirePackage{domitian}   % (Source Serif: \RequirePackage[default,light,bold]{sourceserif})
 \RequirePackage[dutch,english]{babel}   % last one = main language
 \RequirePackage{microtype}
 \RequirePackage{setspace}
@@ -122,11 +122,62 @@
 \RequirePackage{titletoc}
 \newcommand{\chapternumbersize}{90pt}
 
+%% ---- Per-chapter colors ---------------------------------------------
+%% \ChapterPalette{HEX1, HEX2, ...} : chapter n uses color n (cycles).
+%% \ThisChapterColor{HEX}           : override, put it right before \chapter.
+%% \chapterbgtrue / \chapterbgfalse : colored background on opening pages.
+%% The current chapter color is available as the color 'chaptercolor'.
+\newif\ifchapterbg \chapterbgtrue
+\colorlet{chaptercolor}{secondary}
+\ExplSyntaxOn
+\clist_new:N \g__thesis_chapcolors_clist
+\tl_new:N   \g__thesis_nextcolor_tl
+\NewDocumentCommand \ChapterPalette { m }
+  { \clist_gset:Nn \g__thesis_chapcolors_clist {#1} }
+\NewDocumentCommand \ThisChapterColor { m }
+  { \tl_gset:Nn \g__thesis_nextcolor_tl {#1} }
+\cs_new_protected:Npn \thesis_set_chapter_color:
+  {
+    \tl_if_empty:NTF \g__thesis_nextcolor_tl
+      {
+        \clist_if_empty:NTF \g__thesis_chapcolors_clist
+          { \xglobal\colorlet{chaptercolor}{secondary} }
+          {
+            \use:x
+              {
+                \exp_not:N \xglobal \exp_not:N \definecolor {chaptercolor} {HTML}
+                  { \clist_item:Nn \g__thesis_chapcolors_clist
+                      { \int_mod:nn { \value{chapter} - 1 }
+                          { \clist_count:N \g__thesis_chapcolors_clist } + 1 } }
+              }
+          }
+      }
+      {
+        \use:x { \exp_not:N \xglobal \exp_not:N \definecolor
+                   {chaptercolor} {HTML} { \g__thesis_nextcolor_tl } }
+        \tl_gclear:N \g__thesis_nextcolor_tl
+      }
+  }
+\cs_set_eq:NN \ThesisSetChapterColor \thesis_set_chapter_color:
+\ExplSyntaxOff
+
+%% Paint the opening page of the chapter (the next page shipped out).
+\newcommand{\ThesisChapterBackground}{%
+    \ifchapterbg
+        \AddToHookNext{shipout/background}{%
+            \put(0,-\paperheight){\color{chaptercolor}\rule{\paperwidth}{\paperheight}}}%
+    \fi}
+
+%% Numbered chapters: set color, paint the page, big number.
 \titleformat{\chapter}[display]
-    {\flushright\bfseries}
-    {\color{chapternum}\fontsize{\chapternumbersize}{\chapternumbersize}\selectfont\thechapter}
+    {\ThesisSetChapterColor\ThesisChapterBackground\flushright\bfseries}
+    {\ifchapterbg\color{chapternumbg}\else\color{chaptercolor}\fi
+     \fontsize{\chapternumbersize}{\chapternumbersize}\selectfont\thechapter}
     {0pt}
     {\Huge\color{primary}}
+%% Unnumbered chapters (Summary, Bibliography, ...): plain white page.
+\titleformat{name=\chapter,numberless}[display]
+    {\flushright\bfseries}{}{0pt}{\Huge\color{primary}}
 \titlespacing*{\chapter}{0pt}{0pt}{2\baselineskip}
 
 \titleformat{\section}
@@ -174,10 +225,10 @@
             -(0pt,1in+\topmargin+\headheight+\headsep)
             -(0pt,\value{chapter}\thumbvspace-\thumbvspace)$);
         \ifstrequal{#1}{east}
-          {\fill[secondary,rounded corners=4pt] ($(corner)+(4pt,0)$)
+          {\fill[chaptercolor,rounded corners=4pt] ($(corner)+(4pt,0)$)
                 rectangle ++(-\thumbhspace-4pt,-\thumbheight);
            \node[anchor=east,inner sep=8pt] at ($(corner)-(0,0.5\thumbheight)$)}
-          {\fill[secondary,rounded corners=4pt] ($(corner)-(4pt,0)$)
+          {\fill[chaptercolor,rounded corners=4pt] ($(corner)-(4pt,0)$)
                 rectangle ++(\thumbhspace+4pt,-\thumbheight);
            \node[anchor=west,inner sep=8pt] at ($(corner)-(0,0.5\thumbheight)$)}
           {\bfseries\color{thumbtext}\fontsize{18pt}{18pt}\selectfont\thechapter};

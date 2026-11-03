@@ -18,22 +18,43 @@
 % \SetPalette{333333}{999999}{000000}{FFFFFF}   % Grayscale (cheap printing)
 
 %% ---------------------------------------------------------------------
-%% 2) FINE-TUNING (optional). \SetPalette fills these automatically;
+%% 2) CHAPTER COLORS — one color per chapter, in order (cycles if there
+%%    are more chapters than colors). Used for the background of the
+%%    chapter's first page and for its thumb tabs.
+%%    To give one chapter a specific color, write
+%%        \ThisChapterColor{F4A259}
+%%    right before its \chapter{...} in Chapter.tex.
+%% ---------------------------------------------------------------------
+\ChapterPalette{
+    A8DADC,   % Chapter 1  mint
+    F4A259,   % Chapter 2  orange
+    95D5B2,   % Chapter 3  green
+    CDB4DB,   % Chapter 4  lavender
+    F7C8C8,   % Chapter 5  pink
+    FFE66D,   % Chapter 6  yellow
+    B8C0FF,   % Chapter 7  periwinkle
+    D4A373    % Chapter 8  sand
+}
+\chapterbgtrue      % \chapterbgfalse -> white opening pages (only thumbs colored)
+
+%% ---------------------------------------------------------------------
+%% 3) FINE-TUNING (optional). \SetPalette fills these automatically;
 %%    uncomment a line to override a single element.
 %% ---------------------------------------------------------------------
 %  Where each color is used:
-%    primary    : chapter & section titles, links, citations, bullets, header line
-%    secondary  : big chapter number, thumb tabs, box frames, cover stripe
-%    accent     : \hl{highlight} text, todo notes
-%    coverbg    : background of the cover (first) page
-%    covertext  : title/author text on the cover page
-%    boxbg      : background of the boxJ highlight box
-%    chapternum : the big chapter number
-%    thumbtext  : chapter number inside the thumb tabs
-%    links      : hyperlinks (cross-references, citations, URLs)
+%    primary      : chapter & section titles, links, citations, bullets, header line
+%    secondary    : box frames, abstract lines, cover stripe
+%    accent       : \hl{highlight} text, todo notes
+%    coverbg      : background of the cover (first) page
+%    covertext    : title/author text on the cover page
+%    boxbg        : background of the boxJ highlight box
+%    chapternumbg : big chapter number on the colored opening page
+%    thumbtext    : chapter number inside the thumb tabs
+%    links        : hyperlinks (cross-references, citations, URLs)
+%    chaptercolor : set automatically per chapter (use it in your own text, e.g. \color{chaptercolor})
 %
 % \definecolor{covertext}{HTML}{1D3557}
 % \definecolor{boxbg}{HTML}{F1FAEE}
-% \definecolor{chapternum}{HTML}{A8DADC}
+% \definecolor{chapternumbg}{HTML}{FFFFFF}
 % \definecolor{thumbtext}{HTML}{FFFFFF}
 % \definecolor{links}{HTML}{3A5A73}
